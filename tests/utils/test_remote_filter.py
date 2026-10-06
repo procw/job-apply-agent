@@ -102,6 +102,36 @@ class TestUSOnlyRejects:
             PROFILE,
         ) == "reject"
 
+    def test_hybrid_title_rejected_when_location_is_generic_remote(self):
+        profile = _profile(
+            accepted=["worldwide", "global", "united states", "us", "usa"],
+            rejected=[],
+            work_auth={"usa": True},
+            location="Fontana, California, United States",
+        )
+        assert classify_remote_eligibility(
+            {
+                "title": "Senior Software Engineer (Hybrid)",
+                "raw_location_text": "Remote",
+                "location": "Remote",
+                "description_text": "",
+                "description": "",
+            },
+            profile,
+        ) == "reject"
+
+    def test_onsite_title_rejected_when_location_is_generic_remote(self):
+        assert classify_remote_eligibility(
+            {
+                "title": "Backend Engineer - Onsite",
+                "raw_location_text": "Remote",
+                "location": "Remote",
+                "description_text": "",
+                "description": "",
+            },
+            PROFILE,
+        ) == "reject"
+
     def test_description_requires_other_city_rejected(self):
         profile = _profile(
             accepted=["worldwide", "global", "united states", "us", "usa"],

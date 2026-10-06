@@ -99,6 +99,13 @@ class TestHardRejects:
         assert result["recommended_status"] == "rejected"
         assert result["reject_code"] == "blacklist"
 
+    def test_staffing_agency_rejected(self):
+        profile = _profile()
+        profile["preferences"]["exclude_staffing_agencies"] = True  # opt-in
+        result = score_job(_job(company="Insight Global"), profile)
+        assert result["recommended_status"] == "rejected"
+        assert result["reject_code"] == "staffing_agency"
+
     def test_title_keyword_reject(self):
         result = score_job(_job(title="Account Executive"), PROFILE)
         assert result["recommended_status"] == "rejected"

@@ -40,6 +40,7 @@ from utils.application_filter import (
 )
 from utils.compensation import extract_compensation
 from utils.company_research import company_name_key, is_real_company_name
+from utils.staffing_agencies import company_is_staffing_agency
 from utils.scoring import REJECT_LABELS, parse_score_breakdown
 from utils.text_cleaning import sanitize_skill_object_dumps, clean_description
 
@@ -374,6 +375,7 @@ def _job_to_dict(
         "eval_label": eval_label,
         "remote_eligibility": _plain_str(job.remote_eligibility) or None,
         "score_breakdown": parse_score_breakdown(getattr(job, "score_breakdown", None)),
+        "is_staffing_agency": company_is_staffing_agency(job.company or ""),
     }
 
 
@@ -522,6 +524,15 @@ async def dashboard():
         return dashboard_payload(session)
     finally:
         session.close()
+
+
+@app.get("/api/meta/staffing-agencies")
+async def staffing_agencies_meta():
+    from utils.staffing_agencies import KNOWN_STAFFING_AGENCIES
+
+    return {
+        "needles": sorted(KNOWN_STAFFING_AGENCIES, key=len, reverse=True),
+    }
 
 
 _LIST_STATUSES = frozenset({"rejected", "expired", "archived"})
@@ -698,6 +709,43 @@ async def bulk_archive(body: BulkArchiveRequest):
 class BulkRejectStaleRequest(BaseModel):
     status: str
     older_than_days: int = 14
+
+
+class BulkUpdateStatusRequest(BaseModel):
+    from_status: str
+    to_status: str
+    job_ids: Optional[List[int]] = None
+
+
+@app.post("/api/jobs/bulk-update-status")
+async def bulk_update_status(body: BulkUpdateStatusRequest):
+    """Move many jobs to another status (e.g. clear review/shortlisted queues)."""
+    from_allowed = {"review", "shortlisted", "new", "rejected", "expired", "deferred"}
+    to_allowed = {"rejected", "archived", "deferred"}
+    if body.from_status not in from_allowed:
+        raise HTTPException(400, f"from_status must be one of: {', '.join(sorted(from_allowed))}")
+    if body.to_status not in to_allowed:
+        raise HTTPException(400, f"to_status must be one of: {', '.join(sorted(to_allowed))}")
+
+    session = _Session()
+    try:
+        query = session.query(Job).filter(Job.status == body.from_status)
+        if body.job_ids:
+            query = query.filter(Job.id.in_(body.job_ids))
+        rows = query.all()
+        count = len(rows)
+        for job in rows:
+            job.status = body.to_status
+            if body.to_status == "rejected" and not job.reject_code:
+                job.reject_code = "manual"
+                job.reject_detail = job.reject_detail or "Removed from queue (bulk)"
+        session.commit()
+        return {"ok": True, "updated": count}
+    except Exception as exc:
+        session.rollback()
+        raise HTTPException(500, str(exc)) from exc
+    finally:
+        session.close()
 
 
 @app.post("/api/jobs/bulk-reject-stale")

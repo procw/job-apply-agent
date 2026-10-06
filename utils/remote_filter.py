@@ -480,6 +480,20 @@ def classify_remote_eligibility(job: Dict[str, Any], profile: Dict[str, Any] | N
     if remote_only and _is_onsite_only(title, raw_location):
         return "reject"
 
+    # Listing location is generic "Remote" but title still says hybrid / on-site.
+    if remote_only and _is_unrestricted_remote(raw_location):
+        home = profile_home_location(profile)
+        if _HYBRID_RE.search(title):
+            hybrid_ok = _is_unrestricted_remote(title) or (
+                home is not None
+                and _is_place_tied(title)
+                and place_matches_home(title, home)
+            )
+            if not hybrid_ok:
+                return "reject"
+        if _ONSITE_SIGNAL_RE.search(title) and not _has_remote_signal(title):
+            return "reject"
+
     # Hybrid / city + "remote available": keep only when the named place matches
     # personal.location (same city/state, or US-wide with no other state).
     # Fully remote / worldwide is not place-tied and is unchanged.

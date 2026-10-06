@@ -75,6 +75,16 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(145deg,#091418 0%
 .list-reason{font-size:10.5px;font-weight:650;padding:2px 8px;border-radius:10px;flex-shrink:0;max-width:132px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;}
 .list-date{font-size:11.5px;color:var(--text-muted);width:60px;text-align:right;flex-shrink:0;}
 .list-row{cursor:pointer;}
+.list-agency-group{border-bottom:1px solid var(--border-subtle);}
+.list-agency-group-header{display:flex;align-items:center;gap:10px;padding:10px 4px;cursor:pointer;user-select:none;background:var(--bg-subtle);border-radius:6px;margin:4px 0;}
+.list-agency-group-header:hover{background:var(--bg-hover);}
+.list-agency-chevron{width:18px;font-size:11px;color:var(--text-muted);flex-shrink:0;transition:transform .15s ease;}
+.list-agency-group.expanded .list-agency-chevron{transform:rotate(90deg);}
+.list-agency-group-title{flex:1;font-size:13px;font-weight:600;color:var(--text-primary);}
+.list-agency-group-meta{font-size:11.5px;color:var(--text-secondary);}
+.list-agency-group-body{display:none;padding-left:8px;border-left:2px solid var(--border-subtle);margin-left:10px;margin-bottom:6px;}
+.list-agency-group.expanded .list-agency-group-body{display:block;}
+.list-agency-section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);padding:12px 4px 6px;}
 .reject-counts{display:flex;flex-wrap:wrap;gap:6px;padding:4px 4px 12px;flex-shrink:0;}
 .reject-count-chip{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:16px;border:1px solid var(--border);background:var(--bg-subtle);color:var(--text-secondary);cursor:pointer;}
 .reject-count-chip:hover{border-color:var(--accent-mid);color:var(--accent);}
@@ -412,6 +422,10 @@ a.card-company:hover{text-decoration:underline;}
     <span>Archived</span><span class="count">—</span>
   </div>
   <div class="strip-spacer"></div>
+  <button class="btn-reject-stale" id="removeAllBtn" onclick="openRemoveAllModal('tab')" title="Remove all jobs in this tab from the queue">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+    Remove All
+  </button>
   <button class="btn-reject-stale" id="rejectStaleBtn" onclick="openRejectStaleModal()" title="Reject all jobs in this tab older than 2 weeks">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
     Reject Stale
@@ -789,6 +803,23 @@ a.card-company:hover{text-decoration:underline;}
   </div>
 </div>
 
+<!-- Remove All modal -->
+<div class="modal-overlay" id="removeAllOverlay" onclick="closeRemoveAllModal()" style="display:none"></div>
+<div class="modal-box" id="removeAllModal" style="display:none">
+  <div class="modal-header">
+    <span class="modal-title" id="removeAllTitle">Remove All</span>
+    <button class="btn-close" onclick="closeRemoveAllModal()">×</button>
+  </div>
+  <div class="modal-body">
+    <p class="modal-hint" id="removeAllMsg"></p>
+    <div id="removeAllList" style="max-height:260px;overflow-y:auto;margin-top:4px;display:none"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-modal-cancel" onclick="closeRemoveAllModal()">Cancel</button>
+    <button class="btn-modal-fill" style="background:var(--red);border:none;" id="removeAllConfirmBtn" onclick="confirmRemoveAll()">Remove All</button>
+  </div>
+</div>
+
 <!-- Archive All modal -->
 <div class="modal-overlay" id="archiveAllOverlay" onclick="closeArchiveAllModal()" style="display:none"></div>
 <div class="modal-box" id="archiveAllModal" style="display:none">
@@ -816,14 +847,23 @@ let pipelinePoller = null;
 let rejectCounts = [];
 let listFilter = 'all';
 let listSortBy = 'sum';
+let listGroupExpanded = {};
+let _removeAllMode = 'tab';
+let _removeAllJobIds = [];
 let viewingListCard = false;
-let queueView = 'card';
+let queueView = 'list';
 const _LIST_STATUSES = new Set(['rejected', 'expired', 'archived']);
 const _QUEUE_LIST_STATUSES = new Set(['review', 'shortlisted', 'applied']);
+let _staffingAgencyNeedles = [];
+const _STAFFING_NAME_RE = /\b(staffing|recruiting|recruitment|talent solutions|talent partners|workforce solutions)\b/i;
 
 // ── Boot ───────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   loadStats();
+  try {
+    const meta = await api('/api/meta/staffing-agencies');
+    _staffingAgencyNeedles = meta.needles || [];
+  } catch (e) { /* UI still works with is_staffing_agency from API */ }
   // Deep-link from email: ?job_id=N auto-selects that job.
   const _qs = new URLSearchParams(window.location.search);
   const _deepJobId = _qs.get('job_id') ? parseInt(_qs.get('job_id'), 10) : null;
@@ -906,6 +946,8 @@ function showDashboard(el) {
   if (dash) dash.classList.add('open');
   const staleBtn = document.getElementById('rejectStaleBtn');
   if (staleBtn) staleBtn.classList.remove('visible');
+  const removeAllBtn = document.getElementById('removeAllBtn');
+  if (removeAllBtn) removeAllBtn.classList.remove('visible');
   loadDashboard();
 }
 
@@ -997,7 +1039,7 @@ async function loadJobs(status, opts) {
   const asList = !!(opts && opts.asList);
   _queueListComplete = false;
   try {
-    const unlimited = _LIST_STATUSES.has(status) || status === 'shortlisted' || status === 'applied' || asList;
+    const unlimited = _LIST_STATUSES.has(status) || _QUEUE_LIST_STATUSES.has(status) || asList;
     const qs = [];
     if (unlimited) qs.push('limit=0');
     const suffix = qs.length ? `&${qs.join('&')}` : '';
@@ -1010,8 +1052,8 @@ async function loadJobs(status, opts) {
     rejectCounts = data.reject_counts || [];
     viewingListCard = false;
     idx = 0;
-    _queueListComplete = asList || status === 'shortlisted' || status === 'applied';
-    if (_LIST_STATUSES.has(status) || asList) queueView = 'list';
+    _queueListComplete = asList || _QUEUE_LIST_STATUSES.has(status) || _LIST_STATUSES.has(status);
+    if (_LIST_STATUSES.has(status) || _QUEUE_LIST_STATUSES.has(status) || asList) queueView = 'list';
     else queueView = 'card';
     if (jobs.length === 0) {
       renderEmpty(status);
@@ -1036,6 +1078,106 @@ function filterJobs(status, el) {
   loadJobs(status);
   const staleBtn = document.getElementById('rejectStaleBtn');
   if (staleBtn) staleBtn.classList.toggle('visible', status === 'review' || status === 'shortlisted');
+  const removeAllBtn = document.getElementById('removeAllBtn');
+  if (removeAllBtn) removeAllBtn.classList.toggle('visible', status === 'review' || status === 'shortlisted');
+}
+
+function _removeAllTargetJobs(mode) {
+  if (mode === 'grouped') {
+    const visible = _visibleListJobs(jobs);
+    const keys = _listGroupKeys(visible);
+    const out = [];
+    const seen = new Set();
+    for (const j of visible) {
+      const k = _companyGroupKey(j.company);
+      if (!keys.has(k) || seen.has(j.id)) continue;
+      seen.add(j.id);
+      out.push(j);
+    }
+    return out;
+  }
+  if (mode === 'tab') {
+    return jobs.filter(j => j.status === currentStatus || !j.status);
+  }
+  return [];
+}
+
+function openRemoveAllModal(mode) {
+  _removeAllMode = mode || 'tab';
+  const targets = _removeAllTargetJobs(_removeAllMode);
+  _removeAllJobIds = targets.map(j => j.id);
+  const label = currentStatus === 'shortlisted' ? 'Shortlisted' : 'Review';
+  const titleEl = document.getElementById('removeAllTitle');
+  const msgEl = document.getElementById('removeAllMsg');
+  const listEl = document.getElementById('removeAllList');
+  const confirmBtn = document.getElementById('removeAllConfirmBtn');
+  if (_removeAllMode === 'grouped') {
+    if (titleEl) titleEl.textContent = 'Remove grouped jobs';
+    if (msgEl) {
+      msgEl.textContent = targets.length
+        ? `Reject ${targets.length} job${targets.length === 1 ? '' : 's'} in collapsed employer groups? They move to Rejected.`
+        : 'No grouped jobs in the current list.';
+    }
+  } else {
+    if (titleEl) titleEl.textContent = `Remove all ${label}`;
+    if (msgEl) {
+      msgEl.textContent = targets.length
+        ? `Reject all ${targets.length} job${targets.length === 1 ? '' : 's'} in ${label}? They move to Rejected. This cannot be undone in one click (restore from Rejected if needed).`
+        : `No jobs in ${label}.`;
+    }
+  }
+  if (targets.length > 0) {
+    const preview = targets.slice(0, 12);
+    listEl.innerHTML = preview.map(j => `
+      <div style="display:flex;align-items:center;gap:9px;padding:7px 4px;border-bottom:1px solid var(--border-subtle);">
+        <div style="width:26px;height:26px;border-radius:50%;background:${j.avatar_color};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${esc(j.avatar_text)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12.5px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(j.title)}</div>
+          <div style="font-size:11.5px;color:var(--text-secondary)">${esc(j.company)}</div>
+        </div>
+      </div>`).join('')
+      + (targets.length > preview.length
+        ? `<div style="padding:8px 4px;font-size:11.5px;color:var(--text-muted)">…and ${targets.length - preview.length} more</div>`
+        : '');
+    listEl.style.display = '';
+  } else {
+    listEl.innerHTML = '';
+    listEl.style.display = 'none';
+  }
+  if (confirmBtn) confirmBtn.style.display = targets.length > 0 ? '' : 'none';
+  document.getElementById('removeAllOverlay').style.display = '';
+  document.getElementById('removeAllModal').style.display = '';
+}
+
+function closeRemoveAllModal() {
+  document.getElementById('removeAllOverlay').style.display = 'none';
+  document.getElementById('removeAllModal').style.display = 'none';
+  _removeAllJobIds = [];
+}
+
+async function confirmRemoveAll() {
+  if (!_removeAllJobIds.length) {
+    closeRemoveAllModal();
+    return;
+  }
+  const confirmBtn = document.getElementById('removeAllConfirmBtn');
+  if (confirmBtn) confirmBtn.disabled = true;
+  try {
+    const res = await api('/api/jobs/bulk-update-status', 'POST', {
+      from_status: currentStatus,
+      to_status: 'rejected',
+      job_ids: _removeAllMode === 'grouped' ? _removeAllJobIds : null,
+    });
+    const n = res.updated ?? _removeAllJobIds.length;
+    closeRemoveAllModal();
+    showToast(`Removed ${n} job${n === 1 ? '' : 's'}`, '');
+    loadStats();
+    loadJobs(currentStatus);
+  } catch (e) {
+    showToast('Remove all failed', 'error');
+  } finally {
+    if (confirmBtn) confirmBtn.disabled = false;
+  }
 }
 
 function openRejectStaleModal() {
@@ -1420,6 +1562,136 @@ function setListSort(key) {
   renderList(jobs);
 }
 
+function _companyGroupKey(company) {
+  return (company || '').trim().toLowerCase() || '__unknown__';
+}
+
+function _inferStaffingAgency(company) {
+  const n = (company || '').trim().toLowerCase();
+  if (!n) return false;
+  for (const needle of _staffingAgencyNeedles) {
+    if (needle && n.includes(needle)) return true;
+  }
+  return _STAFFING_NAME_RE.test(company || '');
+}
+
+function _jobIsStaffingAgency(j) {
+  if (j.is_staffing_agency === true) return true;
+  if (j.is_staffing_agency === false) return false;
+  return _inferStaffingAgency(j.company);
+}
+
+function _listGroupKeys(visible) {
+  const counts = new Map();
+  for (const j of visible) {
+    const k = _companyGroupKey(j.company);
+    counts.set(k, (counts.get(k) || 0) + 1);
+  }
+  const groupKeys = new Set();
+  for (const j of visible) {
+    const k = _companyGroupKey(j.company);
+    if (_jobIsStaffingAgency(j) || (counts.get(k) || 0) > 1) groupKeys.add(k);
+  }
+  return groupKeys;
+}
+
+function _renderCompanyGroup(group, scoreColor, jobList) {
+  const key = _companyGroupKey(group.company);
+  const expanded = !!listGroupExpanded[key];
+  const rows = group.jobs.map(j => _renderListJobRow(j, jobList, scoreColor)).join('');
+  const tag = group.isAgency
+    ? '<span class="list-agency-group-meta" style="margin-left:6px">Staffing</span>'
+    : '';
+  return `
+  <div class="list-agency-group${expanded ? ' expanded' : ''}" data-group="${esc(key)}">
+    <div class="list-agency-group-header" onclick="toggleAgencyGroup(decodeURIComponent('${encodeURIComponent(key)}'), event)">
+      <span class="list-agency-chevron">▶</span>
+      <span class="list-agency-group-title">${esc(group.company)}</span>
+      ${tag}
+      <span class="list-agency-group-meta">${group.jobs.length} role${group.jobs.length === 1 ? '' : 's'}</span>
+    </div>
+    <div class="list-agency-group-body">${rows}</div>
+  </div>`;
+}
+
+/** Walk ``visible`` in sort order; groups appear where the first member appears. */
+function _renderListPreservingOrder(visible, jobList, scoreColor) {
+  const groupKeys = _listGroupKeys(visible);
+  const rendered = new Set();
+  const htmlParts = [];
+  for (const j of visible) {
+    const k = _companyGroupKey(j.company);
+    if (!groupKeys.has(k)) {
+      htmlParts.push(_renderListJobRow(j, jobList, scoreColor));
+      continue;
+    }
+    if (rendered.has(k)) continue;
+    rendered.add(k);
+    const groupJobs = visible.filter(x => _companyGroupKey(x.company) === k);
+    htmlParts.push(_renderCompanyGroup({
+      company: j.company || 'Unknown',
+      jobs: groupJobs,
+      isAgency: groupJobs.some(_jobIsStaffingAgency),
+    }, scoreColor, jobList));
+  }
+  return { htmlParts, hasGroups: rendered.size > 0 };
+}
+
+function toggleAgencyGroup(key, event) {
+  if (event) event.stopPropagation();
+  listGroupExpanded[key] = !listGroupExpanded[key];
+  renderList(jobs);
+}
+
+function expandAllAgencyGroups() {
+  for (const k of _listGroupKeys(_sortedListJobs(jobs))) listGroupExpanded[k] = true;
+  renderList(jobs);
+}
+
+function collapseAllAgencyGroups() {
+  listGroupExpanded = {};
+  renderList(jobs);
+}
+
+function _renderListJobRow(j, jobList, scoreColor) {
+  const original = jobList.indexOf(j);
+  const label = _jobFilterLabel(j);
+  const tip = j.reject_detail || label;
+  const rowActions = currentStatus === 'rejected'
+    ? `<button class="list-archive" type="button" title="Archive" style="width:78px" onclick="archiveJobAt(${original}, event)">Archive</button>`
+    : currentStatus === 'review'
+    ? `<div class="list-actions three">
+        <button class="list-archive" type="button" title="Archive" onclick="setJobStatusAt(${original}, 'archived', event)">Archive</button>
+        <button class="list-shortlist" type="button" title="Shortlist" onclick="setJobStatusAt(${original}, 'shortlisted', event)">Shortlist</button>
+        <button class="list-applied" type="button" title="Applied" onclick="setJobStatusAt(${original}, 'applied', event)">Applied</button>
+      </div>`
+    : currentStatus === 'shortlisted'
+    ? `<div class="list-actions two">
+        <button class="list-archive" type="button" title="Archive" onclick="archiveJobAt(${original}, event)">Archive</button>
+        <button class="list-applied" type="button" title="Applied" onclick="setJobStatusAt(${original}, 'applied', event)">Applied</button>
+      </div>`
+    : '';
+  const criterion = _isEvalList() && listSortBy !== 'sum';
+  const shownScore = criterion ? _listScoreValue(j) : j.fit_score;
+  const dateVal = currentStatus === 'applied' ? (j.updated_at || j.created_at) : j.created_at;
+  const reasonCell = currentStatus === 'applied' ? '' : `<div class="list-reason" style="${j.fit_score != null ? scoreColor(j.fit_score) : 'background:var(--bg-subtle);color:var(--text-muted)'}" title="${esc(tip)}">${esc(label)}</div>`;
+  return `
+  <div class="list-row" onclick="openListJob(${original})">
+    <div class="list-avatar" style="background:${j.avatar_color}">${esc(j.avatar_text)}</div>
+    <div class="list-info">
+      <div class="list-title">${esc(j.title)}</div>
+      <div class="list-company">${esc(j.company)}${companyAppliedStar(j)}</div>
+    </div>
+    ${reasonCell}
+    <div class="list-score" style="${shownScore != null ? scoreColor(shownScore, criterion) : 'color:var(--text-muted)'}">${shownScore != null ? shownScore : '—'}</div>
+    <div class="list-date">${dateVal ? relativeDate(dateVal) : '—'}</div>
+    ${rowActions}
+    <a class="list-link" href="${esc(j.url)}" target="_blank" rel="noopener" title="Open job posting" onclick="event.stopPropagation()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+  </div>`;
+}
+
 function renderList(jobList) {
   viewingListCard = false;
   queueView = 'list';
@@ -1474,44 +1746,16 @@ function renderList(jobList) {
     }
   }
   const visible = _sortedListJobs(jobList);
-  document.getElementById('listViewRows').innerHTML = visible.map(j => {
-    const original = jobList.indexOf(j);
-    const label = _jobFilterLabel(j);
-    const tip = j.reject_detail || label;
-    const rowActions = currentStatus === 'rejected'
-      ? `<button class="list-archive" type="button" title="Archive" style="width:78px" onclick="archiveJobAt(${original}, event)">Archive</button>`
-      : currentStatus === 'review'
-      ? `<div class="list-actions three">
-          <button class="list-archive" type="button" title="Archive" onclick="setJobStatusAt(${original}, 'archived', event)">Archive</button>
-          <button class="list-shortlist" type="button" title="Shortlist" onclick="setJobStatusAt(${original}, 'shortlisted', event)">Shortlist</button>
-          <button class="list-applied" type="button" title="Applied" onclick="setJobStatusAt(${original}, 'applied', event)">Applied</button>
-        </div>`
-      : currentStatus === 'shortlisted'
-      ? `<div class="list-actions two">
-          <button class="list-archive" type="button" title="Archive" onclick="archiveJobAt(${original}, event)">Archive</button>
-          <button class="list-applied" type="button" title="Applied" onclick="setJobStatusAt(${original}, 'applied', event)">Applied</button>
-        </div>`
-      : '';
-    const criterion = _isEvalList() && listSortBy !== 'sum';
-    const shownScore = criterion ? _listScoreValue(j) : j.fit_score;
-    const dateVal = currentStatus === 'applied' ? (j.updated_at || j.created_at) : j.created_at;
-    const reasonCell = currentStatus === 'applied' ? '' : `<div class="list-reason" style="${j.fit_score != null ? scoreColor(j.fit_score) : 'background:var(--bg-subtle);color:var(--text-muted)'}" title="${esc(tip)}">${esc(label)}</div>`;
-    return `
-    <div class="list-row" onclick="openListJob(${original})">
-      <div class="list-avatar" style="background:${j.avatar_color}">${esc(j.avatar_text)}</div>
-      <div class="list-info">
-        <div class="list-title">${esc(j.title)}</div>
-        <div class="list-company">${esc(j.company)}${companyAppliedStar(j)}</div>
-      </div>
-      ${reasonCell}
-      <div class="list-score" style="${shownScore != null ? scoreColor(shownScore, criterion) : 'color:var(--text-muted)'}">${shownScore != null ? shownScore : '—'}</div>
-      <div class="list-date">${dateVal ? relativeDate(dateVal) : '—'}</div>
-      ${rowActions}
-      <a class="list-link" href="${esc(j.url)}" target="_blank" rel="noopener" title="Open job posting" onclick="event.stopPropagation()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      </a>
-    </div>`;
-  }).join('');
+  const { htmlParts, hasGroups } = _renderListPreservingOrder(visible, jobList, scoreColor);
+  const groupControls = hasGroups
+    ? `<div class="list-agency-section-label" style="padding-top:0;border:none;margin-bottom:4px">
+        Grouped employers
+        <button type="button" class="list-archive" style="font-size:11px;padding:2px 8px;margin-left:8px" onclick="expandAllAgencyGroups();event.stopPropagation()">Expand all</button>
+        <button type="button" class="list-archive" style="font-size:11px;padding:2px 8px;margin-left:4px" onclick="collapseAllAgencyGroups();event.stopPropagation()">Collapse all</button>
+        <button type="button" class="list-archive" style="font-size:11px;padding:2px 8px;margin-left:4px;color:var(--red);border-color:var(--red-mid)" onclick="openRemoveAllModal('grouped');event.stopPropagation()">Remove all</button>
+      </div>`
+    : '';
+  document.getElementById('listViewRows').innerHTML = groupControls + htmlParts.join('');
   document.getElementById('listView').style.display = '';
   document.getElementById('navCounter').textContent = `${visible.length} ${currentStatus} jobs`;
   const archiveAll = document.getElementById('btnArchiveAll');

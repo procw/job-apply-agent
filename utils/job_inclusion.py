@@ -16,6 +16,7 @@ from sqlalchemy import or_
 from models.database import InterviewPrepSheet, Job
 from utils.remote_filter import classify_remote_eligibility
 from utils.seniority import seniority_exclusion
+from utils.staffing_agencies import staffing_agency_exclusion
 
 _KEEP_STATUSES = frozenset({"applied"})
 _DELETE_CHUNK = 400
@@ -131,6 +132,10 @@ def exclusion_reason(
     seniority_skip = seniority_exclusion(job, profile)
     if seniority_skip:
         return seniority_skip
+
+    agency_skip = staffing_agency_exclusion(job, profile)
+    if agency_skip:
+        return agency_skip
 
     profile_langs = {
         str(lang).strip().lower()

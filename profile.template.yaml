@@ -82,6 +82,12 @@ languages:
   - english
 
 preferences:
+  # Set true to drop staffing/recruiting agencies from fetch/evaluate (off by default).
+  # When false, the UI still groups known agencies in list view (expand/collapse).
+  exclude_staffing_agencies: false
+  # Optional: keep specific employers even if they match agency heuristics.
+  # staffing_agency_allowlist:
+  #   - "Some Consulting Co"
   remote_only: true
   accepted_regions:
     - worldwide

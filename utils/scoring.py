@@ -4,6 +4,7 @@ from typing import Dict, Any
 from utils.job_inclusion import detected_posting_language, required_languages_in_text
 from utils.remote_filter import classify_remote_eligibility
 from utils.seniority import matches_seniority_level, seniority_exclusion
+from utils.staffing_agencies import staffing_agency_exclusion
 
 REVIEW_MIN_SCORE = 28
 SHORTLIST_MIN_SCORE = 60
@@ -364,6 +365,10 @@ def score_job(job: Dict[str, Any], profile: Dict[str, Any]) -> Dict[str, Any]:
     blacklist_hit = next((b for b in blacklist if b == company or b in company), None)
     if blacklist_hit:
         return _set_reject(result, "blacklist", f'Company matches blacklist "{blacklist_hit}"')
+
+    agency_skip = staffing_agency_exclusion(job, profile)
+    if agency_skip:
+        return _set_reject(result, agency_skip[0], agency_skip[1])
 
     title_kw = next((kw for kw in TITLE_REJECT_KEYWORDS if kw in title), None)
     if title_kw:
