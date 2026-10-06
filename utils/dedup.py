@@ -284,6 +284,25 @@ def is_duplicate(job_data: Dict[str, Any], session: Session) -> bool:
     return False
 
 
+def listing_is_duplicate(job_data: Dict[str, Any]) -> bool:
+    """True when listing fields match a posting already stored.
+
+    Opens its own session so a connector can skip a detail request. Returns
+    False when the database is unavailable, so the detail fetch still runs.
+    """
+    from utils.job_store import _session
+
+    session = _session()
+    if session is None:
+        return False
+    try:
+        return is_duplicate(job_data, session)
+    except Exception:
+        return False
+    finally:
+        session.close()
+
+
 _STATUS_KEEP_RANK = {
     "applied": 0,
     "deferred": 1,
@@ -291,8 +310,7 @@ _STATUS_KEEP_RANK = {
     "review": 3,
     "new": 4,
     "rejected": 5,
-    "archived": 6,
-    "expired": 7,
+    "expired": 6,
 }
 _KEEP_STATUSES = frozenset({"applied", "deferred"})
 _DELETE_CHUNK = 400
@@ -401,8 +419,19 @@ def collapse_duplicate_jobs(session: Session, *, dry_run: bool = False) -> tuple
 
 
 def backfill_dedup_keys(engine) -> None:
-    """Fill company_key and url_key on rows stored before those columns existed."""
+    """Fill company_key and url_key on rows stored before those columns existed.
+
+    A fresh database has no ``jobs`` table yet. Startup calls this on import,
+    so a missing table or column is a no-op.
+    """
     with engine.connect() as conn:
+        columns = {
+            row[1]
+            for row in conn.execute(text("PRAGMA table_info(jobs)")).fetchall()
+        }
+        needed = {"id", "company", "url", "company_key", "url_key"}
+        if not needed <= columns:
+            return
         rows = conn.execute(text(
             "SELECT id, company, url FROM jobs "
             "WHERE company_key IS NULL OR url_key IS NULL"

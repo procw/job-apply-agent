@@ -12,7 +12,7 @@ import yaml
 import datetime
 import json
 import utils.ssl_compat  # noqa: F401  — trust OS CAs for requests HTTPS
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 from models.database import Job, PipelineRun, ApplicationHistory, ensure_company_profiles, ensure_job_columns
@@ -94,6 +94,7 @@ from utils.scoring import SHORTLIST_MIN_SCORE, dump_score_breakdown, score_job
 from utils.resume_selector import select_resume
 from utils.logger import setup_logger
 from utils.email_report import send_report
+from utils.full_run_sources import enabled_sources, read_enabled
 from utils.job_age import age_days_override, max_job_age_days, resolve_job_age_days
 from utils.job_inclusion import drop_ineligible_jobs, exclusion_reason, load_candidate_profile
 import config
@@ -190,11 +191,6 @@ SYSTEM_BROWSER_DOMAINS = {
     "omnijobs.io",
 }
 
-# Sources skipped when --source all is used. Enable individually with --source <name>.
-# FlexJobs is paid-login and opt-in only (`--source flexjobs`). JustJoin is
-# Poland-focused and opt-in (`--source justjoin`).
-DISABLED_SOURCES: set[str] = {"flexjobs", "justjoin"}
-
 engine = create_engine(config.DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 if engine.dialect.name == "sqlite":
@@ -212,7 +208,7 @@ def _load_profile(profile_path: str):
         return yaml.safe_load(f)
 
 def _should_preserve_final_status(job: Job) -> bool:
-    if job.status in ("applied", "archived", "expired", "deferred"):
+    if job.archived or job.status in ("applied", "expired", "deferred"):
         return True
     return bool(job.llm_status == "completed" and job.status not in (None, "new"))
 
@@ -328,10 +324,20 @@ def _run_fetch(
     if not _skip_cleanup:
         _drop_stored_ineligible(profile, dry_run)
     if source == "all":
-        for s in CONNECTORS:
-            if s in DISABLED_SOURCES:
-                logger.info(f"Skipping '{s}' (disabled — use --source {s} to include).")
-                continue
+        selected = enabled_sources(list(CONNECTORS))
+        skipped = [name for name in CONNECTORS if name not in set(selected)]
+        if read_enabled() is None:
+            logger.error(
+                "full_run_sources.json is missing or invalid; no sources will be fetched. "
+                "Choose connectors in the UI settings."
+            )
+        elif skipped:
+            logger.info(
+                f"Full-run sources: {len(selected)} selected; not selected: {', '.join(skipped)}"
+            )
+        else:
+            logger.info(f"Full-run sources: {len(selected)} selected")
+        for s in selected:
             _run_fetch(
                 s, dry_run, initial=initial, age_days=age_days, _skip_cleanup=True
             )
@@ -423,7 +429,8 @@ def _run_evaluate(profile: str, dry_run: bool, all_jobs: bool):
         query = session.query(Job)
         if all_jobs:
             jobs_to_evaluate = query.filter(
-                Job.status.notin_(["applied", "deferred", "archived", "expired"])
+                Job.status.notin_(["applied", "deferred", "expired"]),
+                or_(Job.archived.is_(False), Job.archived.is_(None)),
             ).all()
         else:
             jobs_to_evaluate = query.filter(Job.status == "new").all()

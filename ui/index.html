@@ -49,31 +49,44 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(145deg,#091418 0%
 .strip-spacer{flex:1;}
 .btn-fill-url{display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--bg-subtle);color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;transition:all var(--transition);margin-right:6px;}
 .btn-fill-url:hover{background:var(--bg-card);color:var(--accent);border-color:var(--accent-mid);}
-.btn-reject-stale{display:none;align-items:center;gap:6px;padding:7px 13px;background:var(--red-light);color:var(--red);border:1px solid var(--red-mid);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;transition:all var(--transition);margin-right:6px;}
-.btn-reject-stale:hover{background:var(--red-mid);color:var(--red);border-color:var(--red);}
+.btn-reject-stale{display:none;align-items:center;gap:6px;padding:7px 13px;background:var(--bg-subtle);color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;transition:all var(--transition);margin-right:6px;}
+.btn-reject-stale:hover{background:var(--bg-hover);color:var(--text-primary);border-color:var(--text-muted);}
 .btn-reject-stale.visible{display:flex;}
 .list-view{padding:0 4px 12px;flex:1;min-height:0;width:100%;display:flex;flex-direction:column;overflow:hidden;}
-.list-view-header{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;padding:0 4px 8px;border-bottom:1px solid var(--border-subtle);margin-bottom:4px;display:flex;gap:12px;flex-shrink:0;}
-.list-view-header span:first-child{flex:1}
-.list-view-rows{flex:1;min-height:0;overflow-y:auto;padding-right:4px;}
-.list-view-rows::-webkit-scrollbar{width:8px;}
-.list-view-rows::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.list-view-header{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;padding:0 4px 8px;border-bottom:1px solid var(--border-subtle);margin-bottom:4px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.list-view-header .list-head-job{flex:1 1 240px;min-width:240px;}
+.list-head-avatar{width:30px;flex-shrink:0;}
+.list-scroll{flex:1;min-height:0;overflow:auto;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#3d8aa3 transparent;}
+.list-scroll::-webkit-scrollbar{width:10px;height:10px;}
+.list-scroll::-webkit-scrollbar-track{background:transparent;}
+.list-scroll::-webkit-scrollbar-thumb{background:#24586c;border:2px solid transparent;background-clip:padding-box;border-radius:999px;}
+.list-scroll::-webkit-scrollbar-thumb:hover{background:#4db8d4;border:2px solid transparent;background-clip:padding-box;}
+.list-scroll::-webkit-scrollbar-corner{background:transparent;}
+.list-view-rows{min-height:0;overflow:visible;}
+.list-view-header{position:sticky;top:0;z-index:1;background:#0d1a1f;}
+.list-view-header,.list-row{min-width:0;}
 .list-row{display:flex;align-items:center;gap:12px;padding:9px 4px;border-bottom:1px solid var(--border-subtle);transition:background var(--transition);}
 .list-row:hover{background:var(--bg-hover);border-radius:6px;}
 .list-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
-.list-info{flex:1;min-width:0;}
-.list-title{font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.list-company{font-size:11.5px;color:var(--text-secondary);}
+.list-info{flex:1 1 240px;min-width:240px;overflow:hidden;}
+.list-title{display:block;font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-company{display:block;font-size:11.5px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-source{flex:0 0 148px;width:148px;min-width:148px;font-size:11.5px;font-weight:600;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-url{flex:0 0 168px;width:168px;min-width:168px;display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-url svg{flex-shrink:0;}
+.list-view-header .list-url{color:var(--text-muted);}
+.list-url:hover{text-decoration:underline;}
 .company-applied-star{color:var(--orange);margin-left:4px;font-size:12px;line-height:1;cursor:help;flex-shrink:0;}
 .card-company .company-applied-star{font-size:13px;}
-.list-score{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;min-width:46px;width:46px;text-align:center;flex-shrink:0;}
+.list-score{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;flex:0 0 46px;width:46px;min-width:46px;text-align:center;}
 .list-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0;}
 .list-toolbar .reject-counts{flex:1;padding-bottom:12px;}
 .list-sort{display:none;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--text-muted);flex-shrink:0;padding:4px 4px 12px;white-space:nowrap;}
-.list-sort select{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--text-primary);background:var(--bg-subtle);border:1px solid var(--border);border-radius:8px;padding:5px 8px;cursor:pointer;}
+.list-sort select{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--text-primary);background:var(--bg-subtle);border:1px solid var(--border);border-radius:8px;padding:5px 8px;cursor:pointer;max-width:220px;}
 .list-sort select:hover{border-color:var(--accent-mid);}
-.list-reason{font-size:10.5px;font-weight:650;padding:2px 8px;border-radius:10px;flex-shrink:0;max-width:132px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;}
-.list-date{font-size:11.5px;color:var(--text-muted);width:60px;text-align:right;flex-shrink:0;}
+.list-source-filter{display:flex;}
+.list-reason{font-size:10.5px;font-weight:650;padding:2px 8px;border-radius:10px;flex:0 0 132px;width:132px;min-width:132px;max-width:132px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;}
+.list-date{font-size:11.5px;color:var(--text-muted);flex:0 0 76px;width:76px;min-width:76px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .list-row{cursor:pointer;}
 .list-agency-group{border-bottom:1px solid var(--border-subtle);}
 .list-agency-group-header{display:flex;align-items:center;gap:10px;padding:10px 4px;cursor:pointer;user-select:none;background:var(--bg-subtle);border-radius:6px;margin:4px 0;}
@@ -85,6 +98,21 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(145deg,#091418 0%
 .list-agency-group-body{display:none;padding-left:8px;border-left:2px solid var(--border-subtle);margin-left:10px;margin-bottom:6px;}
 .list-agency-group.expanded .list-agency-group-body{display:block;}
 .list-agency-section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);padding:12px 4px 6px;}
+.list-row.selected,.list-row.selected:hover{background:rgba(77,184,212,.18);border-radius:6px;}
+.list-check{width:16px;height:16px;flex-shrink:0;margin:0;accent-color:var(--accent);cursor:pointer;}
+.list-view:not(.selecting) .list-check{display:none;}
+.list-select-bar{display:flex;align-items:center;gap:8px;flex-shrink:0;padding:4px 4px 12px;position:relative;}
+.list-select-btn{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--text-secondary);background:var(--bg-subtle);border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;}
+.list-select-btn:hover{border-color:var(--accent-mid);color:var(--accent);}
+.list-select-btn.active{background:var(--accent);color:#042028;border-color:var(--accent);}
+.list-select-btn:disabled{opacity:.45;cursor:default;}
+.list-move-wrap{position:relative;}
+.list-move-menu{position:absolute;top:calc(100% + 4px);right:0;z-index:5;min-width:148px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.28);}
+.list-move-menu button{display:block;width:100%;text-align:left;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:var(--text-primary);background:transparent;border:none;border-radius:6px;padding:7px 10px;cursor:pointer;}
+.list-move-menu button:hover{background:var(--bg-hover);}
+.reject-counts{display:flex;flex-wrap:wrap;gap:6px;padding:4px 4px 12px;flex-shrink:0;}
+.reject-count-chip{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:16px;border:1px solid var(--border);background:var(--bg-subtle);color:var(--text-secondary);cursor:pointer;}
+.reject-count-chip:hover{border-color:var(--accent-mid);color:var(--accent);}
 .reject-counts{display:flex;flex-wrap:wrap;gap:6px;padding:4px 4px 12px;flex-shrink:0;}
 .reject-count-chip{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:16px;border:1px solid var(--border);background:var(--bg-subtle);color:var(--text-secondary);cursor:pointer;}
 .reject-count-chip:hover{border-color:var(--accent-mid);color:var(--accent);}
@@ -102,9 +130,12 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(145deg,#091418 0%
 .why-block-detail{font-size:13px;color:var(--text-secondary);line-height:1.5;}
 .list-link{width:26px;height:26px;border-radius:6px;background:var(--bg-subtle);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);text-decoration:none;transition:all var(--transition);flex-shrink:0;}
 .list-link:hover{background:var(--accent-light);color:var(--accent);border-color:var(--accent-mid);}
-.list-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;width:148px;}
-.list-actions.three{width:222px;}
-.list-actions.two{width:156px;}
+.list-actions{display:flex;align-items:center;gap:6px;flex:0 0 148px;width:148px;min-width:148px;}
+.list-actions.three{flex-basis:222px;width:222px;min-width:222px;}
+.list-actions.two{flex-basis:156px;width:156px;min-width:156px;}
+.list-view-header .list-reason,
+.list-view-header .list-score{background:transparent;padding:0;border-radius:0;font-size:12px;font-weight:600;color:var(--text-muted);}
+.list-view-header .list-actions{justify-content:center;}
 .list-actions .list-archive,.list-actions .list-shortlist,.list-actions .list-applied{flex:1;}
 .list-archive{flex-shrink:0;padding:3px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg-subtle);color:var(--text-secondary);font-family:'Inter',sans-serif;font-size:11px;font-weight:650;cursor:pointer;}
 .list-archive:hover{background:var(--bg-hover);color:var(--text-primary);border-color:var(--text-muted);}
@@ -115,6 +146,18 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(145deg,#091418 0%
 .list-applied:hover{background:#4c1d95;color:#e9d5ff;border-color:var(--purple);}
 .list-archive:disabled:hover{background:var(--bg-subtle);color:var(--text-secondary);border-color:var(--border);}
 .list-view-header .list-archive{text-transform:none;letter-spacing:0;width:78px;padding:3px 6px;white-space:nowrap;}
+.btn-settings{display:flex;align-items:center;justify-content:center;width:36px;height:36px;margin-right:6px;background:var(--bg-subtle);color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all var(--transition);}
+.btn-settings:hover{color:var(--accent);border-color:var(--accent-mid);background:var(--bg-card);}
+.btn-settings svg{width:16px;height:16px;}
+.modal-box.settings{width:680px;}
+.settings-tools{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.settings-tools .modal-input{flex:1;}
+.settings-link{background:none;border:none;color:var(--accent);font-family:inherit;font-size:12px;font-weight:650;cursor:pointer;padding:0;}
+.settings-link:hover{text-decoration:underline;}
+.source-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;max-height:420px;overflow:auto;padding-right:4px;}
+.source-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-primary);padding:5px 2px;cursor:pointer;}
+.source-item input{accent-color:var(--accent);cursor:pointer;}
+.settings-count{margin-right:auto;font-size:12.5px;color:var(--text-muted);align-self:center;}
 .btn-pipeline{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-sm);}
 .btn-pipeline:hover{background:#2563eb;box-shadow:0 0 0 3px rgba(59,130,246,.25);}
 .btn-pipeline svg{width:14px;height:14px;}
@@ -159,7 +202,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(145deg,#091418 0%
 .pipeline-stat .lbl{font-size:11px;color:var(--text-muted);margin-top:2px;font-weight:500;}
 .pipeline-log{background:var(--bg-subtle);border-radius:var(--radius);padding:12px;font-size:11px;font-family:monospace;color:var(--text-secondary);max-height:150px;overflow-y:auto;line-height:1.6;}
 .triage-area{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;padding:32px 24px 24px;max-width:880px;margin:0 auto;width:100%;overflow:auto;}
-.triage-area.list-mode{overflow:hidden;align-items:stretch;padding-top:20px;}
+.triage-area.list-mode{overflow:hidden;align-items:stretch;max-width:1400px;width:100%;padding:12px 8px 16px;}
 .nav-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px;width:100%;flex-shrink:0;}
 .nav-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:12.5px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-sm);}
 .nav-btn:hover{border-color:var(--accent-mid);color:var(--accent);background:var(--accent-light);}
@@ -207,7 +250,12 @@ a.card-company:hover{text-decoration:underline;}
 .overview-row-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);width:80px;flex-shrink:0;}
 .skills-chips{display:flex;flex-wrap:wrap;gap:5px;}
 .skill-chip{padding:3px 9px;border-radius:6px;font-size:12px;font-weight:500;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-mid);}
-.job-url-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px;transition:color .15s;}.job-url-link:hover{color:var(--accent);}
+.job-url-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px;}
+.job-url-link:hover{color:var(--accent);}
+/* Literal color: :visited ignores custom properties. */
+a.list-url:visited,a.list-url:visited:hover,
+a.card-title-link:visited,a.card-title-link:visited:hover,
+a.job-url-link:visited,a.job-url-link:visited:hover{color:#c084fc;}
 .analysis-section{margin-bottom:20px;}
 .analysis-section:last-child{margin-bottom:0;}
 .analysis-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:10px;}
@@ -326,10 +374,10 @@ a.card-company:hover{text-decoration:underline;}
 @keyframes slideIn{from{opacity:0;transform:translateX(40px) rotate(2deg);}to{opacity:1;transform:translateX(0) rotate(0deg);}}
 .slide-in{animation:slideIn .35s cubic-bezier(.34,1.56,.64,1);}
 @keyframes slideOut{to{opacity:0;transform:translateX(-40px) rotate(-2deg);}}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text-primary);color:#fff;padding:10px 20px;border-radius:30px;font-size:13.5px;font-weight:500;z-index:300;transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;box-shadow:var(--shadow-lg);}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:#071820;color:var(--text-primary);border:1px solid var(--border);padding:10px 20px;border-radius:30px;font-size:13.5px;font-weight:500;z-index:300;transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;box-shadow:var(--shadow-lg);}
 .toast.show{transform:translateX(-50%) translateY(0);}
-.toast.success{background:var(--green);}
-.toast.error{background:var(--red);}
+.toast.success{background:var(--green);color:#042028;border-color:transparent;}
+.toast.error{background:var(--red);color:#220e0e;border-color:transparent;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .spin{animation:spin 1s linear infinite;display:inline-block;}
 .schedule-wrap{border-top:1px solid var(--border-subtle);padding-top:14px;margin-top:8px;display:flex;flex-direction:column;gap:4px;}
@@ -426,9 +474,11 @@ a.card-company:hover{text-decoration:underline;}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
     Remove All
   </button>
-  <button class="btn-reject-stale" id="rejectStaleBtn" onclick="openRejectStaleModal()" title="Reject all jobs in this tab older than 2 weeks">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-    Reject Stale
+  <button class="btn-reject-stale" id="rejectStaleBtn" onclick="openRejectStaleModal()" title="Archive jobs in this tab posted before the configured cutoff">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+    Archive Stale
+  </button>
+  <button class="btn-fill-url" onclick="openFillUrlModal()" title="Fill a known application form URL directly">
   </button>
   <button class="btn-fill-url" onclick="openFillUrlModal()" title="Fill a known application form URL directly">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -437,6 +487,9 @@ a.card-company:hover{text-decoration:underline;}
   <button class="btn-fill-url" onclick="openParseResumeModal()" title="Parse a PDF resume to generate/update profile.yaml">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
     Parse Resume
+  </button>
+  <button class="btn-settings" type="button" onclick="openSettings()" title="Choose connectors for full-run">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
   </button>
   <button class="btn-pipeline" id="pipelineBtn" onclick="togglePipeline()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -681,11 +734,8 @@ a.card-company:hover{text-decoration:underline;}
         </button>
       </div>
       <div class="action-bar" id="actionBarArchived" style="display:none">
-        <button class="btn-triage-action btn-restore" onclick="restoreArchivedJob('rejected')">
-          Restore to rejected
-        </button>
-        <button class="btn-triage-action btn-restore" onclick="restoreArchivedJob('review')">
-          Restore to review
+        <button class="btn-triage-action btn-restore" id="btnUnarchive" onclick="unarchiveCurrentJob()">
+          Unarchive
         </button>
         <div class="action-sep"></div>
         <button class="btn-open-apply" onclick="openApply()">
@@ -698,7 +748,20 @@ a.card-company:hover{text-decoration:underline;}
 
   <div class="list-view" id="listView" style="display:none">
     <div class="list-toolbar" id="listToolbar">
+      <div class="list-select-bar" id="listSelectBar">
+        <button type="button" class="list-select-btn" id="btnSelectMode" onclick="toggleSelectMode()">Select</button>
+        <div class="list-move-wrap">
+          <button type="button" class="list-select-btn" id="btnMoveSelected" onclick="toggleMoveMenu(event)" disabled>Move</button>
+          <div class="list-move-menu" id="listMoveMenu" style="display:none"></div>
+        </div>
+      </div>
       <div id="rejectCounts" class="reject-counts" style="display:none"></div>
+      <label class="list-sort list-source-filter" id="listSourceWrap">
+        Source
+        <select id="listSourceSelect" onchange="setListSource(this.value)">
+          <option value="">All sources</option>
+        </select>
+      </label>
       <label class="list-sort" id="listSortWrap">
         Sort by
         <select id="listSortSelect" onchange="setListSort(this.value)">
@@ -714,10 +777,12 @@ a.card-company:hover{text-decoration:underline;}
         </select>
       </label>
     </div>
-    <div class="list-view-header" id="listViewHeader">
-      <span>Job</span><span style="width:132px;text-align:center">Why</span><span style="width:46px;text-align:center">Score</span><span style="width:60px;text-align:right">Added</span><span style="width:26px"></span>
+    <div class="list-scroll" id="listScroll">
+      <div class="list-view-header" id="listViewHeader">
+        <span class="list-head-job">Job</span><span class="list-reason">Why</span><span class="list-score">Score</span><span class="list-date">Posted</span><span class="list-date">Added</span>
+      </div>
+      <div class="list-view-rows" id="listViewRows"></div>
     </div>
-    <div class="list-view-rows" id="listViewRows"></div>
   </div>
 </div>
 
@@ -728,8 +793,8 @@ a.card-company:hover{text-decoration:underline;}
   </div>
   <div class="dashboard-grid">
     <div class="dash-card">
-      <div class="dash-card-title">Jobs fetched last 7 days</div>
-      <div class="dash-card-caption" id="dashBarCaption">Stacked by current status · source: jobs.created_at</div>
+      <div class="dash-card-title">Jobs published last 7 days</div>
+      <div class="dash-card-caption" id="dashBarCaption">Stacked by current status · published date (posted_date)</div>
       <div class="dash-bar-wrap" id="dashBarChart"></div>
       <div class="dash-legend" id="dashBarLegend"></div>
     </div>
@@ -742,6 +807,29 @@ a.card-company:hover{text-decoration:underline;}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- Full-run connector settings -->
+<div class="modal-overlay" id="settingsOverlay" onclick="closeSettings()" style="display:none"></div>
+<div class="modal-box settings" id="settingsModal" style="display:none">
+  <div class="modal-header">
+    <span class="modal-title">Full-run connectors</span>
+    <button class="btn-close" onclick="closeSettings()">×</button>
+  </div>
+  <div class="modal-body">
+    <p class="modal-hint">Checked boards run on full-run. A connector added in code later stays off until you check it here. You can still fetch one board with <code>--source &lt;name&gt;</code>.</p>
+    <div class="settings-tools">
+      <input class="modal-input" id="connectorSearch" type="search" placeholder="Filter connectors" oninput="filterConnectorSettings(this.value)" />
+      <button type="button" class="settings-link" onclick="setAllConnectors(true)">All</button>
+      <button type="button" class="settings-link" onclick="setAllConnectors(false)">None</button>
+    </div>
+    <div class="source-grid" id="connectorGrid"></div>
+  </div>
+  <div class="modal-footer">
+    <span class="settings-count" id="connectorCount"></span>
+    <button class="btn-modal-cancel" onclick="closeSettings()">Cancel</button>
+    <button class="btn-modal-fill" id="connectorSaveBtn" onclick="saveConnectorSettings()">Save</button>
+  </div>
+</div>
 
 <!-- Fill URL modal -->
 <div class="modal-overlay" id="fillUrlOverlay" onclick="closeFillUrlModal()" style="display:none"></div>
@@ -786,11 +874,11 @@ a.card-company:hover{text-decoration:underline;}
   </div>
 </div>
 
-<!-- Reject Stale modal -->
+<!-- Archive Stale modal -->
 <div class="modal-overlay" id="rejectStaleOverlay" onclick="closeRejectStaleModal()" style="display:none"></div>
 <div class="modal-box" id="rejectStaleModal" style="display:none">
   <div class="modal-header">
-    <span class="modal-title">Reject Stale Jobs</span>
+    <span class="modal-title">Archive Stale Jobs</span>
     <button class="btn-close" onclick="closeRejectStaleModal()">×</button>
   </div>
   <div class="modal-body">
@@ -799,7 +887,7 @@ a.card-company:hover{text-decoration:underline;}
   </div>
   <div class="modal-footer">
     <button class="btn-modal-cancel" onclick="closeRejectStaleModal()">Cancel</button>
-    <button class="btn-modal-fill" style="background:var(--red);border:none;" id="rejectStaleConfirmBtn" onclick="confirmRejectStale()">Reject All</button>
+    <button class="btn-modal-fill" style="background:var(--red);border:none;" id="rejectStaleConfirmBtn" onclick="confirmRejectStale()">Archive All</button>
   </div>
 </div>
 
@@ -835,9 +923,12 @@ a.card-company:hover{text-decoration:underline;}
     <button class="btn-modal-fill" id="archiveAllConfirmBtn" onclick="confirmArchiveVisibleRejected()">Archive All</button>
   </div>
 </div>
+  </div>
+</div>
 
 <script>
 // ── State ──────────────────────────────────────────────────────────────────
+let rejectStaleDays = null;
 let jobs = [];
 let idx = 0;
 let currentStatus = 'review';
@@ -846,14 +937,29 @@ let activeTab = 'overview';
 let pipelinePoller = null;
 let rejectCounts = [];
 let listFilter = 'all';
+let listSource = '';
 let listSortBy = 'sum';
 let listGroupExpanded = {};
 let _removeAllMode = 'tab';
 let _removeAllJobIds = [];
 let viewingListCard = false;
 let queueView = 'list';
+let selectMode = false;
+let selectedJobIds = new Set();
+let listVisibleCount = 0;
+let listSelectedVisible = 0;
 const _LIST_STATUSES = new Set(['rejected', 'expired', 'archived']);
-const _QUEUE_LIST_STATUSES = new Set(['review', 'shortlisted', 'applied']);
+const _QUEUE_LIST_STATUSES = new Set(['new', 'review', 'shortlisted', 'applied', 'deferred']);
+const _MOVE_STATUSES = [
+  ['new', 'New'],
+  ['review', 'Review'],
+  ['shortlisted', 'Shortlisted'],
+  ['applied', 'Applied'],
+  ['deferred', 'Deferred'],
+  ['rejected', 'Rejected'],
+  ['expired', 'Expired'],
+  ['archived', 'Archived'],
+];
 let _staffingAgencyNeedles = [];
 const _STAFFING_NAME_RE = /\b(staffing|recruiting|recruitment|talent solutions|talent partners|workforce solutions)\b/i;
 
@@ -878,7 +984,7 @@ async function _openDeepLinkedJob(jobId) {
   try {
     const job = await api(`/api/jobs/${jobId}`);
     // Load the tab matching the job's status, then select it.
-    await loadJobs(job.status || 'shortlisted');
+    await loadJobs(job.archived ? 'archived' : (job.status || 'shortlisted'));
     const i = jobs.findIndex(j => j.id === jobId);
     if (i >= 0) { idx = i; renderCard(idx); }
   } catch(e) {
@@ -891,6 +997,11 @@ async function loadStats() {
   try {
     const data = await api('/api/stats');
     const c = data.counts || {};
+    if (Number.isFinite(data.reject_stale_days) && data.reject_stale_days > 0) {
+      rejectStaleDays = data.reject_stale_days;
+      const staleBtn = document.getElementById('rejectStaleBtn');
+      if (staleBtn) staleBtn.title = `Archive jobs in this tab posted more than ${rejectStaleDays} days ago`;
+    }
     document.querySelectorAll('.status-pill[data-status]').forEach(el => {
       const s = el.dataset.status;
       el.querySelector('.count').textContent = c[s] ?? 0;
@@ -948,6 +1059,7 @@ function showDashboard(el) {
   if (staleBtn) staleBtn.classList.remove('visible');
   const removeAllBtn = document.getElementById('removeAllBtn');
   if (removeAllBtn) removeAllBtn.classList.remove('visible');
+  _syncRejectStaleButton('');
   loadDashboard();
 }
 
@@ -955,9 +1067,9 @@ async function loadDashboard() {
   try {
     const data = await api('/api/dashboard');
     const sub = document.getElementById('dashboardSub');
-    if (sub) sub.textContent = `${data.week_total || 0} jobs fetched in the last ${data.days || 7} days`;
+    if (sub) sub.textContent = `${data.week_total || 0} jobs published in the last ${data.days || 7} days`;
     const cap = document.getElementById('dashBarCaption');
-    if (cap) cap.textContent = 'Stacked by current status · counted from fetch date (created_at)';
+    if (cap) cap.textContent = 'Stacked by current status · published date, including archived jobs';
     _renderDashBars(data);
     _renderDashPie(data);
   } catch (e) {
@@ -979,7 +1091,7 @@ function _renderDashBars(data) {
     ).join('');
   }
   if (!days.length) {
-    host.innerHTML = '<div class="dash-empty">No fetches in the last 7 days</div>';
+    host.innerHTML = '<div class="dash-empty">No jobs published in the last 7 days</div>';
     return;
   }
   const yTicks = [max, Math.round(max / 2), 0];
@@ -1034,8 +1146,16 @@ function _renderDashPie(data) {
 }
 
 // ── Jobs ───────────────────────────────────────────────────────────────────
+function _syncRejectStaleButton(status) {
+  const staleBtn = document.getElementById('rejectStaleBtn');
+  if (staleBtn) staleBtn.classList.toggle('visible', status === 'review' || status === 'shortlisted');
+}
+
 async function loadJobs(status, opts) {
   currentStatus = status;
+  selectMode = false;
+  selectedJobIds = new Set();
+  _syncRejectStaleButton(status);
   const asList = !!(opts && opts.asList);
   _queueListComplete = false;
   try {
@@ -1046,6 +1166,7 @@ async function loadJobs(status, opts) {
     const data = await api(`/api/jobs?status=${encodeURIComponent(status)}${suffix}`);
     jobs = data.jobs || [];
     listFilter = 'all';
+    listSource = '';
     listSortBy = 'sum';
     if (status === 'shortlisted' || status === 'review') jobs = _sortLatestHighScore(jobs);
     if (status === 'applied') jobs = _sortApplied(jobs);
@@ -1180,25 +1301,61 @@ async function confirmRemoveAll() {
   }
 }
 
-function openRejectStaleModal() {
-  const cutoff = Date.now() - 14 * 24 * 60 * 60 * 1000;
-  const stale = jobs.filter(j => j.created_at && new Date(j.created_at).getTime() < cutoff);
+function _jobStaleTime(job) {
+  const raw = job && (job.posted_date || job.created_at);
+  if (!raw) return null;
+  const t = Date.parse(String(raw).includes('T') ? raw : String(raw).replace(' ', 'T'));
+  return Number.isFinite(t) ? t : null;
+}
+
+function _staleJobs(days, jobList = jobs) {
+  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+  return jobList.filter(j => {
+    const t = _jobStaleTime(j);
+    return t != null && t < cutoff;
+  });
+}
+
+let archiveStalePreviewCount = 0;
+
+async function openRejectStaleModal() {
+  const days = rejectStaleDays;
+  if (!Number.isFinite(days)) {
+    showToast('Still loading the stale cutoff', '');
+    return;
+  }
+  let pool = jobs;
+  if (!_queueListComplete) {
+    try {
+      const data = await api(`/api/jobs?status=${encodeURIComponent(currentStatus)}&limit=0`);
+      pool = data.jobs || [];
+    } catch (e) {
+      showToast('Could not load the full queue', 'error');
+      return;
+    }
+  }
+  const stale = _staleJobs(days, pool);
+  archiveStalePreviewCount = stale.length;
   const label = currentStatus === 'shortlisted' ? 'Shortlisted' : 'Review';
   const listEl = document.getElementById('rejectStaleList');
+  const shown = stale.slice(0, 80);
   if (stale.length > 0) {
     document.getElementById('rejectStaleMsg').textContent =
-      `Permanently reject these ${stale.length} ${label} job${stale.length === 1 ? '' : 's'} (older than 14 days)?`;
-    listEl.innerHTML = stale.map(j => `
+      `Archive these ${stale.length} ${label} job${stale.length === 1 ? '' : 's'} posted more than ${days} days ago? Their status stays the same.`;
+    listEl.innerHTML = shown.map(j => `
       <div style="display:flex;align-items:center;gap:9px;padding:7px 4px;border-bottom:1px solid var(--border-subtle);">
         <div style="width:26px;height:26px;border-radius:50%;background:${j.avatar_color};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${esc(j.avatar_text)}</div>
         <div style="flex:1;min-width:0">
           <div style="font-size:12.5px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(j.title)}</div>
-          <div style="font-size:11.5px;color:var(--text-secondary)">${esc(j.company)}${companyAppliedStar(j)} &middot; ${j.created_at ? relativeDate(j.created_at) : '—'}</div>
+          <div style="font-size:11.5px;color:var(--text-secondary)">${esc(j.company)}${companyAppliedStar(j)} &middot; ${j.posted_date ? 'posted ' + relativeDate(j.posted_date) : (j.created_at ? 'added ' + relativeDate(j.created_at) : '—')}</div>
         </div>
       </div>`).join('');
     listEl.style.display = '';
+    if (stale.length > shown.length) {
+      listEl.insertAdjacentHTML('beforeend', `<div style="padding:8px 4px;font-size:12px;color:var(--text-muted)">and ${stale.length - shown.length} more</div>`);
+    }
   } else {
-    document.getElementById('rejectStaleMsg').textContent = `No jobs older than 14 days in the ${label} queue.`;
+    document.getElementById('rejectStaleMsg').textContent = `No jobs posted more than ${days} days ago in the ${label} queue.`;
     listEl.style.display = 'none';
   }
   document.getElementById('rejectStaleConfirmBtn').style.display = stale.length > 0 ? '' : 'none';
@@ -1212,14 +1369,38 @@ function closeRejectStaleModal() {
 }
 
 async function confirmRejectStale() {
+  const days = rejectStaleDays;
+  if (!Number.isFinite(days)) {
+    showToast('Still loading the stale cutoff', '');
+    return;
+  }
+  const staleCount = archiveStalePreviewCount;
+  const confirmBtn = document.getElementById('rejectStaleConfirmBtn');
+  const headerBtn = document.getElementById('rejectStaleBtn');
+  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = 'Archiving…'; }
+  if (headerBtn) headerBtn.disabled = true;
   closeRejectStaleModal();
+  showToast(
+    staleCount
+      ? `Archiving ${staleCount.toLocaleString()} stale job${staleCount === 1 ? '' : 's'}…`
+      : 'Archiving stale jobs…',
+    '',
+    true
+  );
   try {
-    const res = await api('/api/jobs/bulk-reject-stale', 'POST', {status: currentStatus, older_than_days: 14});
-    showToast(`Rejected ${res.rejected} stale job${res.rejected === 1 ? '' : 's'}`, '');
+    const res = await api('/api/jobs/bulk-archive-stale', 'POST', {
+      status: currentStatus,
+      older_than_days: days,
+    });
+    const n = res.archived ?? 0;
+    await loadJobs(currentStatus);
     loadStats();
-    loadJobs(currentStatus);
-  } catch(e) {
-    showToast('Bulk reject failed', 'error');
+    showToast(`Archived ${n} stale job${n === 1 ? '' : 's'}`, 'success');
+  } catch (e) {
+    showToast('Bulk archive failed', 'error');
+  } finally {
+    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = 'Archive All'; }
+    if (headerBtn) headerBtn.disabled = false;
   }
 }
 
@@ -1374,7 +1555,7 @@ function renderCard(i, opts) {
     ${gaps ? `<div class="analysis-section"><div class="analysis-section-title">Skill Gaps</div><ul class="bullet-list gaps">${gaps}</ul></div>` : ''}
     ${job.reasoning ? `<div class="analysis-section"><div class="analysis-section-title">Reasoning</div><div class="reasoning-block">${esc(job.reasoning)}</div></div>` : ''}
     ${job.llm_confidence ? `<div class="confidence-row"><span class="confidence-label">Confidence</span><div class="confidence-bar"><div class="confidence-fill" style="width:${job.llm_confidence}%"></div></div><span class="confidence-pct">${job.llm_confidence}%</span></div>` : ''}
-    ${noLlm ? `<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0">${job.status === 'rejected' ? 'No LLM write-up yet. Click Explain to compare this posting to your profile.' : job.status === 'archived' ? 'No LLM write-up for this archived job.' : 'No LLM analysis yet. Run the pipeline with analyze enabled.'}</div>` : ''}`;
+    ${noLlm ? `<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0">${job.status === 'rejected' ? 'No LLM write-up yet. Click Explain to compare this posting to your profile.' : 'No LLM analysis yet. Run the pipeline with analyze enabled.'}</div>` : ''}`;
 
   // Cover letter
   const coverTextEl = document.getElementById('coverText');
@@ -1392,10 +1573,12 @@ function renderCard(i, opts) {
   // Action bar: show/hide triage for read-only statuses
   const readOnly = ['applied','expired'].includes(job.status);
   const rejected = job.status === 'rejected';
-  const archived = job.status === 'archived';
-  document.getElementById('actionBar').style.display = (readOnly || rejected || archived) ? 'none' : 'flex';
-  document.getElementById('actionBarRejected').style.display = rejected ? 'flex' : 'none';
+  const archived = !!job.archived;
+  document.getElementById('actionBar').style.display = (archived || readOnly || rejected) ? 'none' : 'flex';
+  document.getElementById('actionBarRejected').style.display = (!archived && rejected) ? 'flex' : 'none';
   document.getElementById('actionBarArchived').style.display = archived ? 'flex' : 'none';
+  const unarchiveBtn = document.getElementById('btnUnarchive');
+  if (unarchiveBtn) unarchiveBtn.textContent = `Unarchive to ${_statusLabel(job.status)}`;
   const archiveQueue = document.getElementById('btnArchiveQueue');
   if (archiveQueue) archiveQueue.style.display = job.status === 'shortlisted' ? '' : 'none';
   const appliedQueue = document.getElementById('btnAppliedQueue');
@@ -1484,11 +1667,42 @@ function _listChipCounts(jobList) {
   return [];
 }
 
+function _jobSource(job) {
+  const name = String(job && job.source || '').trim();
+  return name || 'unknown';
+}
+
+function _jobsForSource(jobList = jobs) {
+  if (!listSource) return jobList;
+  return jobList.filter(j => _jobSource(j) === listSource);
+}
+
 function _visibleListJobs(jobList = jobs) {
+  const scoped = _jobsForSource(jobList);
   if (listFilter && listFilter !== 'all') {
-    return jobList.filter(j => _jobFilterCode(j) === listFilter);
+    return scoped.filter(j => _jobFilterCode(j) === listFilter);
   }
-  return jobList;
+  return scoped;
+}
+
+function _syncSourceFilter(jobList) {
+  const sel = document.getElementById('listSourceSelect');
+  if (!sel) return;
+  const counts = new Map();
+  for (const job of jobList) {
+    const name = _jobSource(job);
+    counts.set(name, (counts.get(name) || 0) + 1);
+  }
+  if (listSource && !counts.has(listSource)) listSource = '';
+  const names = [...counts.keys()].sort((a, b) => (counts.get(b) - counts.get(a)) || a.localeCompare(b));
+  const html = [`<option value="">All sources (${jobList.length})</option>`]
+    .concat(names.map(name => `<option value="${esc(name)}">${esc(name)} (${counts.get(name)})</option>`))
+    .join('');
+  if (sel.dataset.options !== html) {
+    sel.innerHTML = html;
+    sel.dataset.options = html;
+  }
+  if (sel.value !== listSource) sel.value = listSource;
 }
 
 function _listScoreValue(j) {
@@ -1560,6 +1774,35 @@ function _syncListSort() {
 function setListSort(key) {
   listSortBy = key || 'sum';
   renderList(jobs);
+}
+
+function setListSource(value) {
+  listSource = value || '';
+  renderList(jobs);
+}
+
+function _paintListChips(jobList) {
+  const showChips = currentStatus === 'rejected' || _isEvalList();
+  const counts = showChips ? _listChipCounts(jobList) : [];
+  if (listFilter !== 'all' && !counts.some(c => c.code === listFilter)) listFilter = 'all';
+  const countsEl = document.getElementById('rejectCounts');
+  if (!countsEl) return;
+  if (showChips) {
+    countsEl.style.display = 'flex';
+    countsEl.dataset.tone = currentStatus === 'rejected' ? 'rejected' : currentStatus;
+    const chips = counts.map(c => `
+      <button class="reject-count-chip${listFilter === c.code ? ' active' : ''}" onclick="filterListBy('${esc(c.code)}')">
+        ${esc(c.label)} ${c.count}
+      </button>`).join('');
+    countsEl.innerHTML = `
+      <button class="reject-count-chip${listFilter === 'all' ? ' active' : ''}" onclick="filterListBy('all')">
+        All ${jobList.length}
+      </button>${chips}`;
+  } else {
+    countsEl.style.display = 'none';
+    countsEl.innerHTML = '';
+    delete countsEl.dataset.tone;
+  }
 }
 
 function _companyGroupKey(company) {
@@ -1691,6 +1934,7 @@ function _renderListJobRow(j, jobList, scoreColor) {
     </a>
   </div>`;
 }
+}
 
 function renderList(jobList) {
   viewingListCard = false;
@@ -1709,43 +1953,42 @@ function renderList(jobList) {
            s >= 50 ? `background:var(--orange-mid);color:var(--orange)` :
                      `background:var(--red-mid);color:var(--red)`;
   };
-  const showChips = currentStatus === 'rejected' || _isEvalList();
-  const counts = showChips ? _listChipCounts(jobList) : [];
-  if (listFilter !== 'all' && !counts.some(c => c.code === listFilter)) listFilter = 'all';
-  const countsEl = document.getElementById('rejectCounts');
-  if (showChips) {
-    countsEl.style.display = 'flex';
-    countsEl.dataset.tone = currentStatus === 'rejected' ? 'rejected' : currentStatus;
-    const chips = counts.map(c => `
-      <button class="reject-count-chip${listFilter === c.code ? ' active' : ''}" onclick="filterListBy('${esc(c.code)}')">
-        ${esc(c.label)} ${c.count}
-      </button>`).join('');
-    countsEl.innerHTML = `
-      <button class="reject-count-chip${listFilter === 'all' ? ' active' : ''}" onclick="filterListBy('all')">
-        All ${jobList.length}
-      </button>${chips}`;
-  } else {
-    countsEl.style.display = 'none';
-    countsEl.innerHTML = '';
-    delete countsEl.dataset.tone;
-  }
+  _syncSourceFilter(jobList);
+  _paintListChips(_jobsForSource(jobList));
   const header = document.getElementById('listViewHeader');
   const reasonHead = currentStatus === 'rejected' ? 'Why' : 'Eval';
   if (header) {
-    const scoreHead = `<span>Job</span><span style="width:132px;text-align:center">${reasonHead}</span><span style="width:46px;text-align:center">Score</span><span style="width:60px;text-align:right">Added</span>`;
+    const checkHead = `<input class="list-check" id="listSelectAll" type="checkbox" title="Select all" onclick="event.stopPropagation(); toggleSelectAllVisible(event)">`;
+    const identityHead = `${checkHead}<span class="list-head-avatar"></span><span class="list-head-job">Job</span><span class="list-source">Source</span><span class="list-url">Link</span>`;
+    const dateHeads = `<span class="list-date" title="When the employer posted the job">Posted</span><span class="list-date" title="When this app saved the job">Added</span>`;
+    const scoreHead = `${identityHead}<span class="list-reason">${reasonHead}</span><span class="list-score">Score</span>${dateHeads}`;
     if (currentStatus === 'rejected') {
-      header.innerHTML = `${scoreHead}<span style="width:78px;text-align:center"><button class="list-archive" type="button" id="btnArchiveAll" title="Archive all visible jobs" onclick="openArchiveAllModal()">Archive All</button></span><span style="width:26px"></span>`;
+      header.innerHTML = `${scoreHead}<span class="list-actions" style="flex-basis:78px;width:78px;min-width:78px"></span>`;
     } else if (currentStatus === 'review') {
-      header.innerHTML = `${scoreHead}<span style="width:222px;text-align:center">Actions</span><span style="width:26px"></span>`;
+      header.innerHTML = `${scoreHead}<span class="list-actions three">Actions</span>`;
     } else if (currentStatus === 'shortlisted') {
-      header.innerHTML = `${scoreHead}<span style="width:156px;text-align:center">Actions</span><span style="width:26px"></span>`;
+      header.innerHTML = `${scoreHead}<span class="list-actions two">Actions</span>`;
     } else if (currentStatus === 'applied') {
-      header.innerHTML = `<span>Job</span><span style="width:46px;text-align:center">Score</span><span style="width:60px;text-align:right">Applied</span><span style="width:26px"></span>`;
+      header.innerHTML = `${identityHead}<span class="list-score">Score</span>${dateHeads}<span class="list-date" title="When you marked it applied">Applied</span>`;
+    } else if (currentStatus === 'archived') {
+      header.innerHTML = `${scoreHead}<span class="list-actions" style="flex-basis:92px;width:92px;min-width:92px"></span>`;
     } else {
-      header.innerHTML = `${scoreHead}<span style="width:26px"></span>`;
+      header.innerHTML = scoreHead;
     }
   }
   const visible = _sortedListJobs(jobList);
+  if (selectedJobIds.size) {
+    const visibleIds = new Set(visible.map(j => j.id));
+    for (const id of selectedJobIds) {
+      if (!visibleIds.has(id)) selectedJobIds.delete(id);
+    }
+  }
+  const indexById = new Map();
+  for (let i = 0; i < jobList.length; i++) indexById.set(jobList[i].id, i);
+  listVisibleCount = visible.length;
+  listSelectedVisible = 0;
+  document.getElementById('listView').classList.toggle('selecting', selectMode);
+
   const { htmlParts, hasGroups } = _renderListPreservingOrder(visible, jobList, scoreColor);
   const groupControls = hasGroups
     ? `<div class="list-agency-section-label" style="padding-top:0;border:none;margin-bottom:4px">
@@ -1756,20 +1999,175 @@ function renderList(jobList) {
       </div>`
     : '';
   document.getElementById('listViewRows').innerHTML = groupControls + htmlParts.join('');
+  for (const j of visible) {
+    if (selectedJobIds.has(j.id)) listSelectedVisible++;
+  }
   document.getElementById('listView').style.display = '';
   document.getElementById('navCounter').textContent = `${visible.length} ${currentStatus} jobs`;
-  const archiveAll = document.getElementById('btnArchiveAll');
-  if (archiveAll) {
-    archiveAll.disabled = visible.length === 0;
-    archiveAll.title = listFilter !== 'all'
-      ? `Archive ${visible.length} visible job${visible.length === 1 ? '' : 's'} for this Why filter`
-      : `Archive all ${visible.length} rejected job${visible.length === 1 ? '' : 's'}`;
-  }
+  const back = document.getElementById('btnBackList');
+  document.getElementById('listView').style.display = '';
+  document.getElementById('navCounter').textContent = `${visible.length} ${currentStatus} jobs`;
   const back = document.getElementById('btnBackList');
   if (back) back.style.display = 'none';
   _syncListSort();
+  _syncSelectChrome();
   updateViewToggle();
 }
+
+function _syncSelectChrome() {
+  const modeBtn = document.getElementById('btnSelectMode');
+  const moveBtn = document.getElementById('btnMoveSelected');
+  const menu = document.getElementById('listMoveMenu');
+  if (modeBtn) {
+    modeBtn.classList.toggle('active', selectMode);
+    modeBtn.textContent = selectMode ? 'Cancel' : 'Select';
+  }
+  const n = selectedJobIds.size;
+  if (moveBtn) {
+    moveBtn.disabled = !selectMode || n === 0;
+    moveBtn.textContent = n ? `Move (${n})` : 'Move';
+  }
+  if (menu && !selectMode) menu.style.display = 'none';
+  const all = document.getElementById('listSelectAll');
+  if (all) {
+    all.checked = listVisibleCount > 0 && listSelectedVisible === listVisibleCount;
+    all.indeterminate = listSelectedVisible > 0 && listSelectedVisible < listVisibleCount;
+  }
+}
+
+function toggleSelectMode() {
+  selectMode = !selectMode;
+  const menu = document.getElementById('listMoveMenu');
+  if (menu) menu.style.display = 'none';
+  if (!selectMode) {
+    selectedJobIds = new Set();
+    listSelectedVisible = 0;
+    document.querySelectorAll('#listViewRows .list-row.selected').forEach(row => {
+      row.classList.remove('selected');
+      const box = row.querySelector('.list-check');
+      if (box) box.checked = false;
+    });
+  }
+  const list = document.getElementById('listView');
+  if (list) list.classList.toggle('selecting', selectMode);
+  _syncSelectChrome();
+}
+
+function onListRowClick(i, id, evt) {
+  if (selectMode) {
+    toggleRowSelected(id, evt);
+    return;
+  }
+  openListJob(i);
+}
+
+function toggleRowSelected(id, evt) {
+  if (evt) evt.stopPropagation();
+  const row = evt && evt.target && evt.target.closest ? evt.target.closest('.list-row') : null;
+  const on = !selectedJobIds.has(id);
+  if (on) selectedJobIds.add(id);
+  else selectedJobIds.delete(id);
+  listSelectedVisible += on ? 1 : -1;
+  if (row) {
+    row.classList.toggle('selected', on);
+    const box = row.querySelector('.list-check');
+    if (box) box.checked = on;
+  }
+  _syncSelectChrome();
+}
+
+function toggleSelectAllVisible(evt) {
+  if (evt) evt.stopPropagation();
+  const rows = document.querySelectorAll('#listViewRows .list-row');
+  const allOn = listVisibleCount > 0 && listSelectedVisible === listVisibleCount;
+  rows.forEach(row => {
+    const id = Number(row.dataset.jobId);
+    if (allOn) selectedJobIds.delete(id);
+    else selectedJobIds.add(id);
+    row.classList.toggle('selected', !allOn);
+    const box = row.querySelector('.list-check');
+    if (box) box.checked = !allOn;
+  });
+  listSelectedVisible = allOn ? 0 : rows.length;
+  _syncSelectChrome();
+}
+
+function toggleMoveMenu(evt) {
+  if (evt) evt.stopPropagation();
+  const menu = document.getElementById('listMoveMenu');
+  if (!menu || !selectedJobIds.size) return;
+  if (menu.style.display !== 'none') {
+    menu.style.display = 'none';
+    return;
+  }
+  menu.innerHTML = _MOVE_STATUSES
+    .filter(([status]) => status !== currentStatus)
+    .map(([status, label]) => `<button type="button" onclick="moveSelected('${status}')">${label}</button>`)
+    .join('');
+  menu.style.display = 'block';
+}
+
+function _removeMovedFromList(moved) {
+  const filterBefore = listFilter;
+  const sourceBefore = listSource;
+  jobs = jobs.filter(j => !moved.has(j.id));
+  selectMode = false;
+  selectedJobIds = new Set();
+  listSelectedVisible = 0;
+  const list = document.getElementById('listView');
+  if (list) list.classList.remove('selecting');
+  if (!jobs.length) {
+    renderEmpty(currentStatus);
+    return;
+  }
+  _syncSourceFilter(jobs);
+  _paintListChips(_jobsForSource(jobs));
+  if (listFilter !== filterBefore || listSource !== sourceBefore) {
+    renderList(jobs);
+    return;
+  }
+  const parent = document.getElementById('listViewRows');
+  const keep = document.createDocumentFragment();
+  parent.querySelectorAll('.list-row').forEach(row => {
+    if (!moved.has(Number(row.dataset.jobId))) keep.appendChild(row);
+  });
+  parent.replaceChildren(keep);
+  listVisibleCount = parent.querySelectorAll('.list-row').length;
+  document.getElementById('navCounter').textContent = `${listVisibleCount} ${currentStatus} jobs`;
+  _syncSelectChrome();
+}
+
+async function moveSelected(status) {
+  const menu = document.getElementById('listMoveMenu');
+  if (menu) menu.style.display = 'none';
+  const ids = [...selectedJobIds];
+  if (!ids.length) return;
+  const btn = document.getElementById('btnMoveSelected');
+  const modeBtn = document.getElementById('btnSelectMode');
+  if (btn) { btn.disabled = true; btn.textContent = 'Moving…'; }
+  if (modeBtn) modeBtn.disabled = true;
+  const label = (_MOVE_STATUSES.find(([value]) => value === status) || [status, status])[1];
+  showToast(`Moving ${ids.length.toLocaleString()} to ${label}…`, '', true);
+  try {
+    const res = await api('/api/jobs/bulk-status', 'POST', {ids, status});
+    const n = res.updated ?? ids.length;
+    _removeMovedFromList(new Set(ids));
+    loadStats();
+    showToast(`Moved ${n} to ${label}`, 'success');
+  } catch (e) {
+    showToast(e.message || 'Failed to move', 'error');
+    _syncSelectChrome();
+  } finally {
+    if (modeBtn) modeBtn.disabled = false;
+  }
+}
+
+document.addEventListener('click', (evt) => {
+  const menu = document.getElementById('listMoveMenu');
+  if (!menu || menu.style.display === 'none') return;
+  if (evt.target.closest && (evt.target.closest('#btnMoveSelected') || evt.target.closest('#listMoveMenu'))) return;
+  menu.style.display = 'none';
+});
 
 function filterListBy(code) {
   listFilter = code || 'all';
@@ -1849,66 +2247,33 @@ async function restoreRejectedJob() {
   await _moveCurrentJob('review', 'Moved to review');
 }
 
+function _statusLabel(status) {
+  return (_MOVE_STATUSES.find(([value]) => value === status) || [, status || 'Review'])[1];
+}
+
 async function archiveCurrentJob() {
-  await _moveCurrentJob('archived', 'Archived');
+  await _setCurrentArchived(true, 'Archived');
 }
 
-async function restoreArchivedJob(target) {
-  const toast = target === 'review' ? 'Moved to review' : 'Moved to rejected';
-  await _moveCurrentJob(target, toast);
+async function unarchiveCurrentJob() {
+  const job = jobs[idx];
+  await _setCurrentArchived(false, job ? `Back in ${_statusLabel(job.status)}` : 'Unarchived');
 }
 
-function _visibleRejectedJobs() {
-  if (currentStatus !== 'rejected') return [];
-  return _visibleListJobs();
-}
-
-function openArchiveAllModal() {
-  const visible = _visibleRejectedJobs();
-  if (!visible.length) {
-    showToast('Nothing to archive', '');
-    return;
-  }
-  const why = listFilter !== 'all'
-    ? (visible[0].reject_label || listFilter)
-    : null;
-  const n = visible.length;
-  document.getElementById('archiveAllMsg').textContent = why
-    ? `Archive ${n} rejected job${n === 1 ? '' : 's'} with Why "${why}"? They move to Archived and can be restored later.`
-    : `Archive all ${n} rejected job${n === 1 ? '' : 's'}? They move to Archived and can be restored later.`;
-  document.getElementById('archiveAllOverlay').style.display = '';
-  document.getElementById('archiveAllModal').style.display = '';
-}
-
-function closeArchiveAllModal() {
-  document.getElementById('archiveAllOverlay').style.display = 'none';
-  document.getElementById('archiveAllModal').style.display = 'none';
-}
-
-async function confirmArchiveVisibleRejected() {
-  const visible = _visibleRejectedJobs();
-  if (!visible.length) {
-    closeArchiveAllModal();
-    showToast('Nothing to archive', '');
-    return;
-  }
-  const headerBtn = document.getElementById('btnArchiveAll');
-  const confirmBtn = document.getElementById('archiveAllConfirmBtn');
-  if (headerBtn) headerBtn.disabled = true;
-  if (confirmBtn) confirmBtn.disabled = true;
-  closeArchiveAllModal();
+async function _setCurrentArchived(on, toastMsg) {
+  const job = jobs[idx];
+  if (!job) return;
   try {
-    const payload = listFilter !== 'all' ? {reject_codes: [listFilter]} : {};
-    const res = await api('/api/jobs/bulk-archive', 'POST', payload);
-    const n = res.archived ?? visible.length;
-    showToast(`Archived ${n} job${n === 1 ? '' : 's'}`, 'success');
+    await api(`/api/jobs/${job.id}/archive`, 'POST', {archived: on});
+    showToast(toastMsg, 'success');
+    jobs.splice(idx, 1);
+    if (jobs.length === 0) { renderEmpty(currentStatus); loadStats(); return; }
+    if (idx >= jobs.length) idx = jobs.length - 1;
+    if (viewingListCard || queueView === 'list') { renderList(jobs); }
+    else { renderCardWrap(); renderCard(idx); }
     loadStats();
-    loadJobs('rejected');
   } catch (e) {
-    showToast('Failed to archive', 'error');
-    if (headerBtn) headerBtn.disabled = false;
-  } finally {
-    if (confirmBtn) confirmBtn.disabled = false;
+    showToast(on ? 'Failed to archive' : 'Failed to unarchive', 'error');
   }
 }
 
@@ -1916,12 +2281,30 @@ async function archiveJobAt(i, evt) {
   await setJobStatusAt(i, 'archived', evt);
 }
 
+async function unarchiveJobAt(i, evt) {
+  if (evt) evt.stopPropagation();
+  const job = jobs[i];
+  if (!job) return;
+  try {
+    await api(`/api/jobs/${job.id}/archive`, 'POST', {archived: false});
+    showToast(`Back in ${_statusLabel(job.status)}`, 'success');
+    jobs.splice(i, 1);
+    if (idx >= jobs.length) idx = Math.max(0, jobs.length - 1);
+    if (jobs.length === 0) { renderEmpty(currentStatus); loadStats(); return; }
+    renderList(jobs);
+    loadStats();
+  } catch (e) {
+    showToast('Failed to unarchive', 'error');
+  }
+}
+
 async function setJobStatusAt(i, status, evt) {
   if (evt) evt.stopPropagation();
   const job = jobs[i];
   if (!job) return;
   try {
-    await api(`/api/jobs/${job.id}/status`, 'POST', {status});
+    if (status === 'archived') await api(`/api/jobs/${job.id}/archive`, 'POST', {archived: true});
+    else await api(`/api/jobs/${job.id}/status`, 'POST', {status});
     const toasts = {archived: 'Archived', shortlisted: '✓ Shortlisted', applied: '✓ Marked as applied'};
     showToast(toasts[status] || status, 'success');
     jobs.splice(i, 1);
@@ -2509,6 +2892,83 @@ async function confirmApplied(didApply) {
   }
 }
 
+// ── Full-run connector settings ─────────────────────────────────────────────
+let connectorSettings = [];
+let connectorQuery = '';
+
+async function openSettings() {
+  try {
+    const data = await api('/api/settings/connectors');
+    connectorSettings = data.connectors || [];
+    connectorQuery = '';
+    const search = document.getElementById('connectorSearch');
+    if (search) search.value = '';
+    renderConnectorSettings();
+    document.getElementById('settingsOverlay').style.display = 'block';
+    document.getElementById('settingsModal').style.display = 'flex';
+    if (search) search.focus();
+  } catch (e) {
+    showToast('Could not load connector settings. Restart the UI if this build is new.', 'error');
+  }
+}
+
+function closeSettings() {
+  document.getElementById('settingsOverlay').style.display = 'none';
+  document.getElementById('settingsModal').style.display = 'none';
+}
+
+function filterConnectorSettings(value) {
+  connectorQuery = String(value || '').trim().toLowerCase();
+  renderConnectorSettings();
+}
+
+function setConnectorEnabled(name, on) {
+  const row = connectorSettings.find(item => item.name === name);
+  if (row) row.enabled = on;
+  const count = document.getElementById('connectorCount');
+  if (count) {
+    const n = connectorSettings.filter(item => item.enabled).length;
+    count.textContent = `${n} of ${connectorSettings.length} on full-run`;
+  }
+}
+
+function setAllConnectors(on) {
+  connectorSettings.forEach(item => { item.enabled = on; });
+  renderConnectorSettings();
+}
+
+function renderConnectorSettings() {
+  const grid = document.getElementById('connectorGrid');
+  const count = document.getElementById('connectorCount');
+  if (!grid) return;
+  const q = connectorQuery;
+  const shown = connectorSettings.filter(item => !q || item.name.includes(q));
+  grid.innerHTML = shown.map(item => `
+    <label class="source-item">
+      <input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="setConnectorEnabled('${esc(item.name)}', this.checked)">
+      <span>${esc(item.name)}</span>
+    </label>`).join('') || '<div class="modal-hint">No connectors match.</div>';
+  if (count) {
+    const n = connectorSettings.filter(item => item.enabled).length;
+    count.textContent = `${n} of ${connectorSettings.length} on full-run`;
+  }
+}
+
+async function saveConnectorSettings() {
+  const btn = document.getElementById('connectorSaveBtn');
+  const enabled = connectorSettings.filter(item => item.enabled).map(item => item.name);
+  if (btn) btn.disabled = true;
+  try {
+    await api('/api/settings/connectors', 'POST', {enabled});
+    closeSettings();
+    showToast(`Full-run will fetch ${enabled.length} connectors`, 'success');
+  } catch (e) {
+    showToast(e.message || 'Could not save connectors', 'error');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
 // ── Pipeline ───────────────────────────────────────────────────────────────
 // ── Fill URL modal ──────────────────────────────────────────────────────────
 function openFillUrlModal() {
@@ -2779,7 +3239,14 @@ async function api(url, method='GET', body=null) {
 }
 
 function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s||'')
+    .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'")
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function listUrlLabel(url) {
+  try { return new URL(url).hostname.replace(/^www\./i, ''); }
+  catch { return ''; }
 }
 
 function companyAppliedStar(job) {
@@ -2894,6 +3361,12 @@ function renderMarkdown(src) {
   return out.join('');
 }
 
+function _listDateCell(value, label) {
+  const abs = value ? new Date(value).toLocaleString() : '';
+  const tip = abs ? `${label}: ${abs}` : `${label}: unknown`;
+  return `<div class="list-date" title="${esc(tip)}">${value ? relativeDate(value) : '—'}</div>`;
+}
+
 function relativeDate(iso) {
   const d = new Date(iso), now = new Date();
   const diff = Math.floor((now - d) / 86400000);
@@ -2910,12 +3383,12 @@ function badge(rec) {
 }
 
 let _toastTimer;
-function showToast(msg, type='') {
+function showToast(msg, type='', sticky=false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show' + (type ? ' '+type : '');
   clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  if (!sticky) _toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
 }
 </script>
 </body>
